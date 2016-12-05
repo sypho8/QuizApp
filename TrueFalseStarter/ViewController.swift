@@ -63,7 +63,7 @@ class ViewController: UIViewController {
         case fourthAnswerButton: answerIndex = 3
         default: break
         }
-        
+    
         let result = game.checkAnswer(answerIndex: answerIndex)
         
         if result {

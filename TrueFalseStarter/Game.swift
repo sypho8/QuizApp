@@ -17,7 +17,7 @@ class Game {
     var indexOfSelectedQuestion: Int = 0
     var gameSound: SystemSoundID = 0
     var currentQuestion: Question?
-    
+    var indexesOfAskedQuestions: [Int] = []
     let questions: [Question] = [
                                     Question(question: "This was the only US President to serve more than two consecutive terms.", possibleAnswers: ["George Washington","Franklin D. Roosevelt","Woodrow Wilson","Andrew Jackson"], indexOfCorrectAnswer: 1),
                                     Question(question: "Which of the following countries has the most residents?", possibleAnswers: ["Nigeria","Russia","Iran","Vietnam"], indexOfCorrectAnswer: 0),
@@ -42,7 +42,13 @@ class Game {
     }
     
     func getNextQuestion() -> Question {
-        indexOfSelectedQuestion = GKRandomSource.sharedRandom().nextInt(upperBound: questions.count)
+        
+        repeat {
+            indexOfSelectedQuestion = GKRandomSource.sharedRandom().nextInt(upperBound: questions.count)
+        } while indexesOfAskedQuestions.contains(indexOfSelectedQuestion)
+        
+        indexesOfAskedQuestions += [indexOfSelectedQuestion]
+        
         let question = questions[indexOfSelectedQuestion]
         
         currentQuestion = question
@@ -76,6 +82,7 @@ class Game {
     func playAgain() {
         questionsAsked = 0
         correctQuestions = 0
+        indexesOfAskedQuestions = []
     }
     
 }
