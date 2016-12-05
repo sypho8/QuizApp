@@ -56,6 +56,7 @@ class Game {
         
         // Return wether the answer is true or false
         if answerIndex == currentQuestion?.indexOfCorrectAnswer {
+            correctQuestions += 1
             return true
         }
         return false
@@ -63,6 +64,13 @@ class Game {
     
     func getScore() -> (correctQuestions: Int,questionsPerRound: Int) {
         return (correctQuestions, questionsPerRound)
+    }
+    
+    func isOver() -> Bool {
+        if questionsAsked == questionsPerRound {
+            return true
+        }
+        return false
     }
     
     func playAgain() {

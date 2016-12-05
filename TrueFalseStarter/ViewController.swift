@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         // Start game
         game.playGameStartSound()
 
-        questionField.text = game.getNextQuestion().question
+        displayQuestion()
     }
 
 
@@ -40,6 +40,8 @@ class ViewController: UIViewController {
         // Hide the answer buttons
         firstAnswerButton.isHidden = true
         secondAnswerButton.isHidden = true
+        thirdAnswerButton.isHidden = true
+        fourthAnswerButton.isHidden = true
         
         // Display play again button
         playAgainButton.isHidden = false
@@ -52,7 +54,7 @@ class ViewController: UIViewController {
     
     @IBAction func checkAnswer(_ sender: UIButton) {
         
-        var answerIndex: Int
+        var answerIndex = 0
         
         switch sender {
         case firstAnswerButton: answerIndex = 0
@@ -62,23 +64,31 @@ class ViewController: UIViewController {
         default: break
         }
         
-        let result = game.checkAnswer(answerIndex)
+        let result = game.checkAnswer(answerIndex: answerIndex)
         
-        let selectedQuestionDict = trivia[indexOfSelectedQuestion]
-        let correctAnswer = selectedQuestionDict["Answer"]
-        
-        if (sender === firstAnswerButton &&  correctAnswer == "True") || (sender === secondAnswerButton && correctAnswer == "False") {
-            correctQuestions += 1
+        if result {
             questionField.text = "Correct!"
         } else {
             questionField.text = "Sorry, wrong answer!"
         }
-        
+
         loadNextRoundWithDelay(seconds: 2)
     }
     
+    func displayQuestion() {
+        
+        let questionToDisplay = game.getNextQuestion()
+        
+        questionField.text = questionToDisplay.question
+        firstAnswerButton.setTitle(questionToDisplay.possibleAnswers[0],for: .normal)
+        secondAnswerButton.setTitle(questionToDisplay.possibleAnswers[1],for: .normal)
+        thirdAnswerButton.setTitle(questionToDisplay.possibleAnswers[2],for: .normal)
+        fourthAnswerButton.setTitle(questionToDisplay.possibleAnswers[3],for: .normal)
+        
+    }
+    
     func nextRound() {
-        if questionsAsked == questionsPerRound {
+        if game.isOver() {
             // Game is over
             displayScore()
         } else {
@@ -91,6 +101,8 @@ class ViewController: UIViewController {
         // Show the answer buttons
         firstAnswerButton.isHidden = false
         secondAnswerButton.isHidden = false
+        thirdAnswerButton.isHidden = false
+        fourthAnswerButton.isHidden = false
         
         game.playAgain()
         
