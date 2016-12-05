@@ -71,7 +71,8 @@ class ViewController: UIViewController {
         } else {
             questionField.text = "Sorry, wrong answer!"
         }
-
+        
+        
         loadNextRoundWithDelay(seconds: 2)
     }
     
@@ -103,6 +104,9 @@ class ViewController: UIViewController {
         secondAnswerButton.isHidden = false
         thirdAnswerButton.isHidden = false
         fourthAnswerButton.isHidden = false
+        
+        // Hide play again button
+        playAgainButton.isHidden = true
         
         game.playAgain()
         

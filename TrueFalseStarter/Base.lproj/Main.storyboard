@@ -43,7 +43,7 @@
                                     <action selector="checkAnswer:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qfk-Z2-crr"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K17-uy-MvB">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K17-uy-MvB">
                                 <rect key="frame" x="37" y="558" width="300" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.57647058823529407" blue="0.52941176470588236" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -88,18 +88,12 @@
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
-                        <outlet property="falseButton" destination="AS4-HX-g9f" id="Xfj-Ws-1ey"/>
-                        <outlet property="firstAnswer" destination="J1V-MS-ECi" id="QaE-AM-y6i"/>
                         <outlet property="firstAnswerButton" destination="J1V-MS-ECi" id="I4m-oO-bcg"/>
-                        <outlet property="forthAnswer" destination="BzR-Yy-MlX" id="fkO-Iw-lFG"/>
                         <outlet property="fourthAnswerButton" destination="BzR-Yy-MlX" id="8ZG-QE-eqG"/>
                         <outlet property="playAgainButton" destination="K17-uy-MvB" id="wP0-Or-8ih"/>
                         <outlet property="questionField" destination="I3V-ih-1Ky" id="7UI-o2-ATi"/>
-                        <outlet property="secondAnswer" destination="AS4-HX-g9f" id="GYK-Of-GKv"/>
                         <outlet property="secondAnswerButton" destination="AS4-HX-g9f" id="mHf-EF-o6R"/>
-                        <outlet property="thirdAnswer" destination="O6q-PH-eeH" id="Kdh-17-8vA"/>
                         <outlet property="thirdAnswerButton" destination="O6q-PH-eeH" id="Z9S-6o-2oL"/>
-                        <outlet property="trueButton" destination="J1V-MS-ECi" id="iZW-hy-ROl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
