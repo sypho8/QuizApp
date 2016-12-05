@@ -1,0 +1,118 @@
+//
+//  ViewController.swift
+//  TrueFalseStarter
+//
+//  Created by Pasan Premaratne on 3/9/16.
+//  Copyright © 2016 Treehouse. All rights reserved.
+//
+
+import UIKit
+
+
+class ViewController: UIViewController {
+    
+    let game = Game()
+    
+    @IBOutlet weak var questionField: UILabel!
+    @IBOutlet weak var firstAnswerButton: UIButton!
+    @IBOutlet weak var secondAnswerButton: UIButton!
+    @IBOutlet weak var thirdAnswerButton: UIButton!
+    @IBOutlet weak var fourthAnswerButton: UIButton!
+    @IBOutlet weak var playAgainButton: UIButton!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        game.loadGameStartSound()
+        // Start game
+        game.playGameStartSound()
+
+        questionField.text = game.getNextQuestion().question
+    }
+
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func displayScore() {
+        // Hide the answer buttons
+        firstAnswerButton.isHidden = true
+        secondAnswerButton.isHidden = true
+        
+        // Display play again button
+        playAgainButton.isHidden = false
+        
+        let score = game.getScore()
+        
+        questionField.text = "Way to go!\nYou got \(score.correctQuestions) out of \(score.questionsPerRound) correct!"
+        
+    }
+    
+    @IBAction func checkAnswer(_ sender: UIButton) {
+        
+        var answerIndex: Int
+        
+        switch sender {
+        case firstAnswerButton: answerIndex = 0
+        case secondAnswerButton: answerIndex = 1
+        case thirdAnswerButton: answerIndex = 2
+        case fourthAnswerButton: answerIndex = 3
+        default: break
+        }
+        
+        let result = game.checkAnswer(answerIndex)
+        
+        let selectedQuestionDict = trivia[indexOfSelectedQuestion]
+        let correctAnswer = selectedQuestionDict["Answer"]
+        
+        if (sender === firstAnswerButton &&  correctAnswer == "True") || (sender === secondAnswerButton && correctAnswer == "False") {
+            correctQuestions += 1
+            questionField.text = "Correct!"
+        } else {
+            questionField.text = "Sorry, wrong answer!"
+        }
+        
+        loadNextRoundWithDelay(seconds: 2)
+    }
+    
+    func nextRound() {
+        if questionsAsked == questionsPerRound {
+            // Game is over
+            displayScore()
+        } else {
+            // Continue game
+            displayQuestion()
+        }
+    }
+    
+    @IBAction func playAgain() {
+        // Show the answer buttons
+        firstAnswerButton.isHidden = false
+        secondAnswerButton.isHidden = false
+        
+        game.playAgain()
+        
+        nextRound()
+    }
+    
+
+    
+    // MARK: Helper Methods
+    
+    func loadNextRoundWithDelay(seconds: Int) {
+        // Converts a delay in seconds to nanoseconds as signed 64 bit integer
+        let delay = Int64(NSEC_PER_SEC * UInt64(seconds))
+        // Calculates a time value to execute the method given current time and delay
+        let dispatchTime = DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC)
+        
+        // Executes the nextRound method at the dispatch time on the main queue
+        DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
+            self.nextRound()
+        }
+    }
+    
+
+}
+
