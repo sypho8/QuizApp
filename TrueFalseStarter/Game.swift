@@ -11,11 +11,14 @@ import AudioToolbox
 
 class Game {
     
+    var gameSound: SystemSoundID = 0
+    var correctSound: SystemSoundID = 0
+    var incorrectSound: SystemSoundID = 0
+    var outOfTimeSound: SystemSoundID = 0
     let questionsPerRound = 4
     var questionsAsked = 0
     var correctQuestions = 0
     var indexOfSelectedQuestion: Int = 0
-    var gameSound: SystemSoundID = 0
     var currentQuestion: Question?
     var indexesOfAskedQuestions: [Int] = []
     let lightningRoundTimeInSeconds = 15
@@ -33,18 +36,6 @@ class Game {
                                     Question(question: "Which country was the first to allow women to vote in national elections?", possibleAnswers: ["Poland","United States","Sweden","Senegal"], indexOfCorrectAnswer: 0),
                                     Question(question: "Which of these countries won the most medals in the 2012 Summer Games?", possibleAnswers: ["France","Germany","Japan","Great Britian"], indexOfCorrectAnswer: 3)
                                 ]
-    
-    func loadGameStartSound() {
-        
-        let pathToSoundFile = Bundle.main.path(forResource: "GameSound", ofType: "wav")
-        let soundURL = URL(fileURLWithPath: pathToSoundFile!)
-        AudioServicesCreateSystemSoundID(soundURL as CFURL, &gameSound)
-        
-    }
-    
-    func playGameStartSound() {
-        AudioServicesPlaySystemSound(gameSound)
-    }
     
     func getNextQuestion() -> Question {
         
@@ -145,6 +136,40 @@ class Game {
         correctQuestions = 0
         indexesOfAskedQuestions = []
         
+    }
+    
+    // Audio Methods
+    
+    func loadGameSounds() {
+        
+        let pathToGameSoundFile = Bundle.main.path(forResource: "GameSound", ofType: "wav")
+        let soundURL = URL(fileURLWithPath: pathToGameSoundFile!)
+        AudioServicesCreateSystemSoundID(soundURL as CFURL, &gameSound)
+        
+        let pathToCorrectSoundFile = Bundle.main.path(forResource: "CorrectSound", ofType: "mp3")
+        let correctSoundURL = URL(fileURLWithPath: pathToCorrectSoundFile!)
+        AudioServicesCreateSystemSoundID(correctSoundURL as CFURL, &correctSound)
+        
+        let pathToIncorrectSoundFile = Bundle.main.path(forResource: "IncorrectSound", ofType: "wav")
+        let incorrectSoundURL = URL(fileURLWithPath: pathToIncorrectSoundFile!)
+        AudioServicesCreateSystemSoundID(incorrectSoundURL as CFURL, &incorrectSound)
+        
+        let pathToOutOfTimeSoundFile = Bundle.main.path(forResource: "OutOfTimeSound", ofType: "mp3")
+        let outOfTimeSoundURL = URL(fileURLWithPath: pathToOutOfTimeSoundFile!)
+        AudioServicesCreateSystemSoundID(outOfTimeSoundURL as CFURL, &outOfTimeSound)
+        
+    }
+    
+    func playGameStartSound() {
+        AudioServicesPlaySystemSound(gameSound)
+    }
+    
+    func playCorrectSound() {
+        AudioServicesPlaySystemSound(correctSound)
+    }
+    
+    func playIncorrectSound() {
+        AudioServicesPlaySystemSound(incorrectSound)
     }
     
 }

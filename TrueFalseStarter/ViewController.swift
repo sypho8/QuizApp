@@ -25,11 +25,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        game.loadGameStartSound()
+        game.loadGameSounds()
         // Start game
         game.playGameStartSound()
 
         displayQuestion()
+        
     }
 
 
@@ -77,9 +78,11 @@ class ViewController: UIViewController {
             if answer.isCorrect {
                 isCorrectLable.textColor = UIColor(red: 1/255.0, green: 146/255.0, blue: 135/255.0, alpha: 1)
                 isCorrectLable.text = "Correct!"
+                game.playCorrectSound()
             } else {
                 isCorrectLable.textColor = UIColor(red: 255/255.0, green: 127/255.0, blue: 0, alpha: 1)
                 isCorrectLable.text = "Sorry, that's not it."
+                game.playIncorrectSound()
             }
             
             isCorrectLable.isHidden = false
