@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         game.loadGameStartSound()
         // Start game
@@ -69,7 +70,7 @@ class ViewController: UIViewController {
         default: break
         }
     
-        let answer = game.checkAnswerOfCurrentQuestionWith(answerIndex: answerIndex)
+        let answer = game.checkAnswerOfCurrentQuestion(withAnswerIndex: answerIndex)
         
         if answer.isCorrect {
             isCorrectLable.textColor = UIColor(red: 1/255.0, green: 146/255.0, blue: 135/255.0, alpha: 1)
@@ -112,6 +113,41 @@ class ViewController: UIViewController {
         
     }
     
+    func startLightningIfEnabled() {
+        
+        if game.isLightning() {
+            let currentQuestionIndex = game.getCurrentQuestionIndex()
+            // Converts a delay in seconds to nanoseconds as signed 64 bit integer
+            let delay = Int64(NSEC_PER_SEC * UInt64(game.getLightningTime()))
+            // Calculates a time value to execute the method given current time and delay
+            let dispatchTime = DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC)
+            
+            // Executes the nextRound method at the dispatch time on the main queue
+            DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
+                if !self.game.isOver() {
+                    if currentQuestionIndex == self.game.getCurrentQuestionIndex() {
+                        self.onTimeout()
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func onTimeout() {
+        
+        let answerIndex = game.checkAnswerOfCurrentQuestion()
+        
+        isCorrectLable.textColor = UIColor(red: 255/255.0, green: 0, blue: 0, alpha: 1)
+        isCorrectLable.text = "Bummer.. keep up the time!"
+        isCorrectLable.isHidden = false
+        
+        displayCorrectAnswerWith(index: answerIndex)
+        
+        nextMoveButton.isHidden = false
+        
+    }
+    
     func displayQuestion() {
         
         isCorrectLable.isHidden = true
@@ -127,6 +163,8 @@ class ViewController: UIViewController {
         secondAnswerButton.setTitle(questionToDisplay.possibleAnswers[1],for: .normal)
         thirdAnswerButton.setTitle(questionToDisplay.possibleAnswers[2],for: .normal)
         fourthAnswerButton.setTitle(questionToDisplay.possibleAnswers[3],for: .normal)
+        
+        startLightningIfEnabled()
 
     }
     
@@ -166,18 +204,6 @@ class ViewController: UIViewController {
     
     // MARK: Helper Methods
     
-    func loadNextRoundWithDelay(seconds: Int) {
-        
-        // Converts a delay in seconds to nanoseconds as signed 64 bit integer
-        let delay = Int64(NSEC_PER_SEC * UInt64(seconds))
-        // Calculates a time value to execute the method given current time and delay
-        let dispatchTime = DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC)
-        
-        // Executes the nextRound method at the dispatch time on the main queue
-        DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
-//            self.nextRound()
-        }
-        
-    }
+
 }
 

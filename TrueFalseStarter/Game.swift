@@ -18,6 +18,8 @@ class Game {
     var gameSound: SystemSoundID = 0
     var currentQuestion: Question?
     var indexesOfAskedQuestions: [Int] = []
+    let lightningRoundTimeInSeconds = 15
+    let inLightningMode = true
     let questions: [Question] = [
                                     Question(question: "This was the only US President to serve more than two consecutive terms.", possibleAnswers: ["George Washington","Franklin D. Roosevelt","Woodrow Wilson","Andrew Jackson"], indexOfCorrectAnswer: 1),
                                     Question(question: "Which of the following countries has the most residents?", possibleAnswers: ["Nigeria","Russia","Iran","Vietnam"], indexOfCorrectAnswer: 0),
@@ -56,22 +58,35 @@ class Game {
         return question
     }
     
-    func checkAnswerOfCurrentQuestionWith(answerIndex: Int) -> (isCorrect: Bool, index: Int) {
+    func checkAnswerOfCurrentQuestion() -> Int {
+        questionsAsked += 1
+        return (currentQuestion?.indexOfCorrectAnswer)!
+    }
+    
+    func checkAnswerOfCurrentQuestion(withAnswerIndex: Int) -> (isCorrect: Bool, index: Int) {
         // Increment the questions asked counter
         questionsAsked += 1
         
         let correctAnswerIndex = (currentQuestion?.indexOfCorrectAnswer)!
         
         // Return wether the answer is true or false
-        if answerIndex ==  correctAnswerIndex{
+        if withAnswerIndex ==  correctAnswerIndex{
             correctQuestions += 1
             return (true, correctAnswerIndex)
         }
         return (false, correctAnswerIndex)
     }
     
+    func getLightningTime() -> Int {
+        return lightningRoundTimeInSeconds
+    }
+    
     func getScore() -> (correctQuestions: Int,questionsPerRound: Int) {
         return (correctQuestions, questionsPerRound)
+    }
+    
+    func getCurrentQuestionIndex() -> Int {
+        return (currentQuestion?.indexOfCorrectAnswer)!
     }
     
     func isOver() -> Bool {
@@ -86,6 +101,10 @@ class Game {
             return true
         }
         return false
+    }
+    
+    func isLightning() -> Bool {
+        return inLightningMode
     }
     
     func playAgain() {
