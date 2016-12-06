@@ -147,6 +147,7 @@ class ViewController: UIViewController {
         
         isCorrectLable.textColor = UIColor(red: 255/255.0, green: 0, blue: 0, alpha: 1)
         isCorrectLable.text = "Bummer.. keep up the time!"
+        game.playOutOfTimeSound()
         isCorrectLable.isHidden = false
         
         displayCorrectAnswerWith(index: answerIndex)

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6594AB001DF7623D0057DBD4 /* OutOfTimeSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6594AAFF1DF7623D0057DBD4 /* OutOfTimeSound.mp3 */; };
+		655B8AF41DF7656200985D37 /* OotSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 655B8AF31DF7656200985D37 /* OotSound.mp3 */; };
 		65B35D491DF58689000A7B8C /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B35D481DF58689000A7B8C /* Game.swift */; };
 		65B35D4B1DF586CA000A7B8C /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B35D4A1DF586CA000A7B8C /* Question.swift */; };
 		65B35D4D1DF7605A000A7B8C /* CorrectSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 65B35D4C1DF7605A000A7B8C /* CorrectSound.mp3 */; };
@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6594AAFF1DF7623D0057DBD4 /* OutOfTimeSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = OutOfTimeSound.mp3; sourceTree = "<group>"; };
+		655B8AF31DF7656200985D37 /* OotSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = OotSound.mp3; sourceTree = "<group>"; };
 		65B35D481DF58689000A7B8C /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		65B35D4A1DF586CA000A7B8C /* Question.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		65B35D4C1DF7605A000A7B8C /* CorrectSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = CorrectSound.mp3; sourceTree = "<group>"; };
@@ -77,7 +77,7 @@
 				97093D521C932116001275BC /* GameSound.wav */,
 				65B35D4C1DF7605A000A7B8C /* CorrectSound.mp3 */,
 				65B35D4E1DF76116000A7B8C /* IncorrectSound.wav */,
-				6594AAFF1DF7623D0057DBD4 /* OutOfTimeSound.mp3 */,
+				655B8AF31DF7656200985D37 /* OotSound.mp3 */,
 			);
 			path = TrueFalseStarter;
 			sourceTree = "<group>";
@@ -145,10 +145,10 @@
 				65B35D4F1DF76116000A7B8C /* IncorrectSound.wav in Resources */,
 				65B35D4D1DF7605A000A7B8C /* CorrectSound.mp3 in Resources */,
 				97093D531C932116001275BC /* GameSound.wav in Resources */,
+				655B8AF41DF7656200985D37 /* OotSound.mp3 in Resources */,
 				97093D461C913506001275BC /* LaunchScreen.storyboard in Resources */,
 				97093D431C913506001275BC /* Assets.xcassets in Resources */,
 				97093D411C913506001275BC /* Main.storyboard in Resources */,
-				6594AB001DF7623D0057DBD4 /* OutOfTimeSound.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

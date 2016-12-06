@@ -154,8 +154,8 @@ class Game {
         let incorrectSoundURL = URL(fileURLWithPath: pathToIncorrectSoundFile!)
         AudioServicesCreateSystemSoundID(incorrectSoundURL as CFURL, &incorrectSound)
         
-        let pathToOutOfTimeSoundFile = Bundle.main.path(forResource: "OutOfTimeSound", ofType: "mp3")
-        let outOfTimeSoundURL = URL(fileURLWithPath: pathToOutOfTimeSoundFile!)
+        let pathToOOTSoundFile = Bundle.main.path(forResource: "OotSound", ofType: "mp3")
+        let outOfTimeSoundURL = URL(fileURLWithPath: pathToOOTSoundFile!)
         AudioServicesCreateSystemSoundID(outOfTimeSoundURL as CFURL, &outOfTimeSound)
         
     }
@@ -170,6 +170,10 @@ class Game {
     
     func playIncorrectSound() {
         AudioServicesPlaySystemSound(incorrectSound)
+    }
+    
+    func playOutOfTimeSound() {
+        AudioServicesPlaySystemSound(outOfTimeSound)
     }
     
 }
