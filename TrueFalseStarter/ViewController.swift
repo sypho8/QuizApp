@@ -8,16 +8,17 @@
 
 import UIKit
 
-
 class ViewController: UIViewController {
     
     let game = Game()
     
     @IBOutlet weak var questionField: UILabel!
+    @IBOutlet weak var isCorrectLable: UILabel!
     @IBOutlet weak var firstAnswerButton: UIButton!
     @IBOutlet weak var secondAnswerButton: UIButton!
     @IBOutlet weak var thirdAnswerButton: UIButton!
     @IBOutlet weak var fourthAnswerButton: UIButton!
+    @IBOutlet weak var nextMoveButton: UIButton!
     @IBOutlet weak var playAgainButton: UIButton!
     
     
@@ -37,6 +38,7 @@ class ViewController: UIViewController {
     }
     
     func displayScore() {
+        
         // Hide the answer buttons
         firstAnswerButton.isHidden = true
         secondAnswerButton.isHidden = true
@@ -44,7 +46,10 @@ class ViewController: UIViewController {
         fourthAnswerButton.isHidden = true
         
         // Display play again button
+        nextMoveButton.isHidden = true
+        nextMoveButton.setTitle("Next Question", for: .normal)
         playAgainButton.isHidden = false
+        isCorrectLable.isHidden = true
         
         let score = game.getScore()
         
@@ -64,19 +69,56 @@ class ViewController: UIViewController {
         default: break
         }
     
-        let result = game.checkAnswer(answerIndex: answerIndex)
+        let answer = game.checkAnswerOfCurrentQuestionWith(answerIndex: answerIndex)
         
-        if result {
-            questionField.text = "Correct!"
+        if answer.isCorrect {
+            isCorrectLable.textColor = UIColor(red: 1/255.0, green: 146/255.0, blue: 135/255.0, alpha: 1)
+            isCorrectLable.text = "Correct!"
         } else {
-            questionField.text = "Sorry, wrong answer!"
+            isCorrectLable.textColor = UIColor(red: 255/255.0, green: 127/255.0, blue: 0, alpha: 1)
+            isCorrectLable.text = "Sorry, that's not it."
         }
         
+        isCorrectLable.isHidden = false
         
-        loadNextRoundWithDelay(seconds: 2)
+        displayCorrectAnswerWith(index: answer.index)
+        
+        nextMoveButton.isHidden = false
+
+    }
+    
+    func displayCorrectAnswerWith(index: Int) {
+        
+        firstAnswerButton.alpha = 0.5
+        secondAnswerButton.alpha = 0.5
+        thirdAnswerButton.alpha = 0.5
+        fourthAnswerButton.alpha = 0.5
+        
+        switch index {
+        case 0:
+            firstAnswerButton.alpha = 1
+            firstAnswerButton.backgroundColor?.withAlphaComponent(0.5)
+        case 1:
+            secondAnswerButton.alpha = 1
+            secondAnswerButton.backgroundColor?.withAlphaComponent(0.5)
+        case 2:
+            thirdAnswerButton.alpha = 1
+            thirdAnswerButton.backgroundColor?.withAlphaComponent(0.5)
+        case 3:
+            fourthAnswerButton.alpha = 1
+            fourthAnswerButton.backgroundColor?.withAlphaComponent(0.5)
+        default: break
+        }
+        
     }
     
     func displayQuestion() {
+        
+        isCorrectLable.isHidden = true
+        firstAnswerButton.alpha = 1
+        secondAnswerButton.alpha = 1
+        thirdAnswerButton.alpha = 1
+        fourthAnswerButton.alpha = 1
         
         let questionToDisplay = game.getNextQuestion()
         
@@ -85,39 +127,47 @@ class ViewController: UIViewController {
         secondAnswerButton.setTitle(questionToDisplay.possibleAnswers[1],for: .normal)
         thirdAnswerButton.setTitle(questionToDisplay.possibleAnswers[2],for: .normal)
         fourthAnswerButton.setTitle(questionToDisplay.possibleAnswers[3],for: .normal)
+
+    }
+    
+    @IBAction func nextMove() {
+        
+        if game.isOver() {
+            displayScore()
+        } else if game.isLastRound() {
+            nextMoveButton.setTitle("View Score", for: .normal)
+            nextMoveButton.isHidden = true
+            
+            displayQuestion()
+        } else {
+            nextMoveButton.isHidden = true
+            
+            displayQuestion()
+        }
         
     }
     
-    func nextRound() {
-        if game.isOver() {
-            // Game is over
-            displayScore()
-        } else {
-            // Continue game
-            displayQuestion()
-        }
-    }
-    
     @IBAction func playAgain() {
+        
         // Show the answer buttons
         firstAnswerButton.isHidden = false
         secondAnswerButton.isHidden = false
         thirdAnswerButton.isHidden = false
         fourthAnswerButton.isHidden = false
         
-        // Hide play again button
         playAgainButton.isHidden = true
         
         game.playAgain()
         
-        nextRound()
+        displayQuestion()
+    
     }
     
-
     
     // MARK: Helper Methods
     
     func loadNextRoundWithDelay(seconds: Int) {
+        
         // Converts a delay in seconds to nanoseconds as signed 64 bit integer
         let delay = Int64(NSEC_PER_SEC * UInt64(seconds))
         // Calculates a time value to execute the method given current time and delay
@@ -125,10 +175,9 @@ class ViewController: UIViewController {
         
         // Executes the nextRound method at the dispatch time on the main queue
         DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
-            self.nextRound()
+//            self.nextRound()
         }
+        
     }
-    
-
 }
 

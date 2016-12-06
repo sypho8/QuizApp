@@ -56,16 +56,18 @@ class Game {
         return question
     }
     
-    func checkAnswer(answerIndex: Int) -> Bool {
+    func checkAnswerOfCurrentQuestionWith(answerIndex: Int) -> (isCorrect: Bool, index: Int) {
         // Increment the questions asked counter
         questionsAsked += 1
         
+        let correctAnswerIndex = (currentQuestion?.indexOfCorrectAnswer)!
+        
         // Return wether the answer is true or false
-        if answerIndex == currentQuestion?.indexOfCorrectAnswer {
+        if answerIndex ==  correctAnswerIndex{
             correctQuestions += 1
-            return true
+            return (true, correctAnswerIndex)
         }
-        return false
+        return (false, correctAnswerIndex)
     }
     
     func getScore() -> (correctQuestions: Int,questionsPerRound: Int) {
@@ -74,6 +76,13 @@ class Game {
     
     func isOver() -> Bool {
         if questionsAsked == questionsPerRound {
+            return true
+        }
+        return false
+    }
+    
+    func isLastRound() -> Bool {
+        if questionsAsked + 1 == questionsPerRound {
             return true
         }
         return false
