@@ -60,31 +60,35 @@ class ViewController: UIViewController {
     
     @IBAction func checkAnswer(_ sender: UIButton) {
         
-        var answerIndex = 0
+        if  !game.isAnswered() {
         
-        switch sender {
-        case firstAnswerButton: answerIndex = 0
-        case secondAnswerButton: answerIndex = 1
-        case thirdAnswerButton: answerIndex = 2
-        case fourthAnswerButton: answerIndex = 3
-        default: break
+            var answerIndex = 0
+            
+            switch sender {
+            case firstAnswerButton: answerIndex = 0
+            case secondAnswerButton: answerIndex = 1
+            case thirdAnswerButton: answerIndex = 2
+            case fourthAnswerButton: answerIndex = 3
+            default: break
+            }
+        
+            let answer = game.checkAnswerOfCurrentQuestion(withAnswerIndex: answerIndex)
+            
+            if answer.isCorrect {
+                isCorrectLable.textColor = UIColor(red: 1/255.0, green: 146/255.0, blue: 135/255.0, alpha: 1)
+                isCorrectLable.text = "Correct!"
+            } else {
+                isCorrectLable.textColor = UIColor(red: 255/255.0, green: 127/255.0, blue: 0, alpha: 1)
+                isCorrectLable.text = "Sorry, that's not it."
+            }
+            
+            isCorrectLable.isHidden = false
+            
+            displayCorrectAnswerWith(index: answer.index)
+            
+            nextMoveButton.isHidden = false
+            
         }
-    
-        let answer = game.checkAnswerOfCurrentQuestion(withAnswerIndex: answerIndex)
-        
-        if answer.isCorrect {
-            isCorrectLable.textColor = UIColor(red: 1/255.0, green: 146/255.0, blue: 135/255.0, alpha: 1)
-            isCorrectLable.text = "Correct!"
-        } else {
-            isCorrectLable.textColor = UIColor(red: 255/255.0, green: 127/255.0, blue: 0, alpha: 1)
-            isCorrectLable.text = "Sorry, that's not it."
-        }
-        
-        isCorrectLable.isHidden = false
-        
-        displayCorrectAnswerWith(index: answer.index)
-        
-        nextMoveButton.isHidden = false
 
     }
     
@@ -125,7 +129,7 @@ class ViewController: UIViewController {
             // Executes the nextRound method at the dispatch time on the main queue
             DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
                 if !self.game.isOver() {
-                    if currentQuestionIndex == self.game.getCurrentQuestionIndex() {
+                    if currentQuestionIndex == self.game.getCurrentQuestionIndex() && !self.game.isAnswered(){
                         self.onTimeout()
                     }
                 }

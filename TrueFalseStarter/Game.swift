@@ -19,6 +19,7 @@ class Game {
     var currentQuestion: Question?
     var indexesOfAskedQuestions: [Int] = []
     let lightningRoundTimeInSeconds = 15
+    var isCorrentQuestionAnswered = false
     let inLightningMode = true
     let questions: [Question] = [
                                     Question(question: "This was the only US President to serve more than two consecutive terms.", possibleAnswers: ["George Washington","Franklin D. Roosevelt","Woodrow Wilson","Andrew Jackson"], indexOfCorrectAnswer: 1),
@@ -34,9 +35,11 @@ class Game {
                                 ]
     
     func loadGameStartSound() {
+        
         let pathToSoundFile = Bundle.main.path(forResource: "GameSound", ofType: "wav")
         let soundURL = URL(fileURLWithPath: pathToSoundFile!)
         AudioServicesCreateSystemSoundID(soundURL as CFURL, &gameSound)
+        
     }
     
     func playGameStartSound() {
@@ -49,6 +52,8 @@ class Game {
             indexOfSelectedQuestion = GKRandomSource.sharedRandom().nextInt(upperBound: questions.count)
         } while indexesOfAskedQuestions.contains(indexOfSelectedQuestion)
         
+        isCorrentQuestionAnswered = false
+        
         indexesOfAskedQuestions += [indexOfSelectedQuestion]
         
         let question = questions[indexOfSelectedQuestion]
@@ -56,16 +61,29 @@ class Game {
         currentQuestion = question
         
         return question
+        
+    }
+    
+    func isAnswered() -> Bool{
+        
+        return isCorrentQuestionAnswered
+        
     }
     
     func checkAnswerOfCurrentQuestion() -> Int {
+        
         questionsAsked += 1
+        isCorrentQuestionAnswered = true
+        
         return (currentQuestion?.indexOfCorrectAnswer)!
+        
     }
     
     func checkAnswerOfCurrentQuestion(withAnswerIndex: Int) -> (isCorrect: Bool, index: Int) {
+        
         // Increment the questions asked counter
         questionsAsked += 1
+        isCorrentQuestionAnswered = true
         
         let correctAnswerIndex = (currentQuestion?.indexOfCorrectAnswer)!
         
@@ -75,42 +93,58 @@ class Game {
             return (true, correctAnswerIndex)
         }
         return (false, correctAnswerIndex)
+        
     }
     
     func getLightningTime() -> Int {
+        
         return lightningRoundTimeInSeconds
+        
     }
     
     func getScore() -> (correctQuestions: Int,questionsPerRound: Int) {
+        
         return (correctQuestions, questionsPerRound)
+        
     }
     
     func getCurrentQuestionIndex() -> Int {
+        
         return (currentQuestion?.indexOfCorrectAnswer)!
+        
     }
     
     func isOver() -> Bool {
+        
         if questionsAsked == questionsPerRound {
             return true
         }
         return false
+        
     }
     
     func isLastRound() -> Bool {
+        
         if questionsAsked + 1 == questionsPerRound {
             return true
         }
         return false
+        
     }
     
     func isLightning() -> Bool {
+        
         return inLightningMode
+        
     }
     
     func playAgain() {
+        
+        isCorrentQuestionAnswered = false
         questionsAsked = 0
         correctQuestions = 0
         indexesOfAskedQuestions = []
+        
     }
     
 }
