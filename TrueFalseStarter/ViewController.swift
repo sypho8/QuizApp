@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // Initialize Game class object
     let game = Game()
     
     @IBOutlet weak var questionField: UILabel!
@@ -21,14 +22,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var nextMoveButton: UIButton!
     @IBOutlet weak var playAgainButton: UIButton!
     
+    @IBOutlet weak var fourthButtonHeightConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        // Load game sounds
         game.loadGameSounds()
+        
         // Start game
         game.playGameStartSound()
 
+        // Display question
         displayQuestion()
         
     }
@@ -39,6 +45,7 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // Display the score of the game
     func displayScore() {
         
         // Hide the answer buttons
@@ -48,23 +55,28 @@ class ViewController: UIViewController {
         fourthAnswerButton.isHidden = true
         
         // Display play again button
-        nextMoveButton.isHidden = true
-        nextMoveButton.setTitle("Next Question", for: .normal)
         playAgainButton.isHidden = false
+        
+        // Hide the next move button and the isCorrect lable
+        nextMoveButton.isHidden = true
         isCorrectLable.isHidden = true
         
-        let score = game.getScore()
+        // Change the title of the next button to "Next Question"
+        nextMoveButton.setTitle("Next Question", for: .normal)
         
+        // Show the score to the user
+        let score = game.getScore()
         questionField.text = "Way to go!\nYou got \(score.correctQuestions) out of \(score.questionsPerRound) correct!"
         
     }
     
     @IBAction func checkAnswer(_ sender: UIButton) {
         
-        if  !game.isAnswered() {
-        
-            var answerIndex = 0
+        // Check if question was already answered
+        if !game.isQuestionAnswered() {
             
+            // Set answerIndex value according to the sender (the answer button)
+            var answerIndex = 0
             switch sender {
             case firstAnswerButton: answerIndex = 0
             case secondAnswerButton: answerIndex = 1
@@ -72,9 +84,11 @@ class ViewController: UIViewController {
             case fourthAnswerButton: answerIndex = 3
             default: break
             }
-        
+            
+            // Get the correct answer index (answer.correctIndex) and submitted answer (answerIndex) correctness (answer.isCorrect)
             let answer = game.checkAnswerOfCurrentQuestion(withAnswerIndex: answerIndex)
             
+            // Display to the user if the answer is correct or not (different color and text, in both cases unhide the lable) and play the corresponding sound
             if answer.isCorrect {
                 isCorrectLable.textColor = UIColor(red: 1/255.0, green: 146/255.0, blue: 135/255.0, alpha: 1)
                 isCorrectLable.text = "Correct!"
@@ -84,24 +98,28 @@ class ViewController: UIViewController {
                 isCorrectLable.text = "Sorry, that's not it."
                 game.playIncorrectSound()
             }
-            
             isCorrectLable.isHidden = false
             
-            displayCorrectAnswerWith(index: answer.index)
+            // Highlight correct answer
+            displayCorrectAnswerWith(index: answer.correctIndex)
             
+            // Show the next move button
             nextMoveButton.isHidden = false
             
         }
 
     }
     
+    // Highlight the correct answer
     func displayCorrectAnswerWith(index: Int) {
         
+        // Change buttons opacity
         firstAnswerButton.alpha = 0.5
         secondAnswerButton.alpha = 0.5
         thirdAnswerButton.alpha = 0.5
         fourthAnswerButton.alpha = 0.5
         
+        // Switch on the index supplied and highlight the corresponding button
         switch index {
         case 0:
             firstAnswerButton.alpha = 1
@@ -120,64 +138,95 @@ class ViewController: UIViewController {
         
     }
     
+    // Start lightning round if it's enabled
     func startLightningIfEnabled() {
         
+        // Check if lightning mode is enabled
         if game.isLightning() {
+            
+            // Get current question index
             let currentQuestionIndex = game.getCurrentQuestionIndex()
             // Converts a delay in seconds to nanoseconds as signed 64 bit integer
             let delay = Int64(NSEC_PER_SEC * UInt64(game.getLightningTime()))
             // Calculates a time value to execute the method given current time and delay
             let dispatchTime = DispatchTime.now() + Double(delay) / Double(NSEC_PER_SEC)
             
-            // Executes the nextRound method at the dispatch time on the main queue
+            // Executes the onTimeout method at the dispatch time on the main queue
             DispatchQueue.main.asyncAfter(deadline: dispatchTime) {
+                // Check if the game is not over
                 if !self.game.isOver() {
-                    if currentQuestionIndex == self.game.getCurrentQuestionIndex() && !self.game.isAnswered(){
+                    // Check if the question asked when initiated is still the current question and if the question wasn't already answered, initiate onTimeout function
+                    if currentQuestionIndex == self.game.getCurrentQuestionIndex() && !self.game.isQuestionAnswered(){
                         self.onTimeout()
                     }
                 }
             }
+            
         }
         
     }
     
+    // Handle lightning round timeout
     func onTimeout() {
         
-        let answerIndex = game.checkAnswerOfCurrentQuestion()
+        // Get the correct answer index
+        let answerIndex = game.getAnswerOfCurrentQuestion()
         
+        // Notify the user that the time was up and play the corresponding sound
         isCorrectLable.textColor = UIColor(red: 255/255.0, green: 0, blue: 0, alpha: 1)
         isCorrectLable.text = "Bummer.. keep up the time!"
         game.playOutOfTimeSound()
         isCorrectLable.isHidden = false
         
+        // Highlight correct answer
         displayCorrectAnswerWith(index: answerIndex)
         
+        // Show next move button
         nextMoveButton.isHidden = false
         
     }
     
+    // Get next question and display to user
     func displayQuestion() {
         
+        // Hide isCorrect lable
         isCorrectLable.isHidden = true
-        firstAnswerButton.alpha = 1
-        secondAnswerButton.alpha = 1
-        thirdAnswerButton.alpha = 1
-        fourthAnswerButton.alpha = 1
         
+        // Get next question
         let questionToDisplay = game.getNextQuestion()
         
+        // Display the question to the user
         questionField.text = questionToDisplay.question
-        firstAnswerButton.setTitle(questionToDisplay.possibleAnswers[0],for: .normal)
-        secondAnswerButton.setTitle(questionToDisplay.possibleAnswers[1],for: .normal)
-        thirdAnswerButton.setTitle(questionToDisplay.possibleAnswers[2],for: .normal)
-        fourthAnswerButton.setTitle(questionToDisplay.possibleAnswers[3],for: .normal)
         
+        // Reset alpha to 1 and display the possible answers
+        firstAnswerButton.alpha = 1
+        firstAnswerButton.setTitle(questionToDisplay.possibleAnswers[0],for: .normal)
+        secondAnswerButton.alpha = 1
+        secondAnswerButton.setTitle(questionToDisplay.possibleAnswers[1],for: .normal)
+        thirdAnswerButton.alpha = 1
+        thirdAnswerButton.setTitle(questionToDisplay.possibleAnswers[2],for: .normal)
+        fourthAnswerButton.alpha = 1
+        
+        // If question has 4th option display possible answer and resize height to normal
+        // Else resize height to 0 and set title to ""
+        if questionToDisplay.hasFourthOption() {
+            fourthButtonHeightConstraint.constant = 50.0
+            fourthAnswerButton.setTitle(questionToDisplay.possibleAnswers[3],for: .normal)
+        } else {
+            fourthAnswerButton.setTitle("", for: .normal)
+            fourthButtonHeightConstraint.constant = 0.0
+        }
+        
+        // Start lightning round if enabled
         startLightningIfEnabled()
 
     }
     
     @IBAction func nextMove() {
         
+        // If game is over display score
+        // Else if this is the last round of the game change the next move button text to "View Score" and display next question
+        // Else display question
         if game.isOver() {
             displayScore()
         } else if game.isLastRound() {
@@ -201,17 +250,16 @@ class ViewController: UIViewController {
         thirdAnswerButton.isHidden = false
         fourthAnswerButton.isHidden = false
         
+        // Hide play again button
         playAgainButton.isHidden = true
         
+        // Reset game values
         game.playAgain()
         
+        // Display question
         displayQuestion()
     
     }
-    
-    
-    // MARK: Helper Methods
-    
 
 }
 

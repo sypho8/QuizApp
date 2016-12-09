@@ -12,4 +12,12 @@ struct Question {
     let question: String
     let possibleAnswers: [String]
     let indexOfCorrectAnswer: Int
+    
+    // Return whether question has 4 possible answers
+    func hasFourthOption() -> Bool {
+        if possibleAnswers.count == 4 {
+            return true
+        }
+        return false
+    }
 }
